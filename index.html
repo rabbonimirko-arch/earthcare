@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1.0" />
+  <title>EarthCare · Biglietto da visita elettronico</title>
+
+  <style>
+    * { box-sizing:border-box; -webkit-font-smoothing:antialiased; }
+    body {
+      margin:0;
+      background-color:#050806;
+      color:#fff;
+      font-family:system-ui,-apple-system,Roboto,Arial,sans-serif;
+      display:flex;
+      flex-direction:column;
+      align-items:center;
+      min-height:100vh;
+    }
+
+    .card {
+      width:100%;
+      max-width:400px;
+      padding:24px 16px 48px;
+      display:flex;
+      flex-direction:column;
+      align-items:center;
+    }
+
+    .video-wrapper {
+      width:100%;
+      border-radius:20px;
+      background:radial-gradient(circle at 20% 20%,rgba(0,200,83,0.3) 0%,rgba(0,0,0,0) 70%);
+      box-shadow:
+        0 24px 64px rgba(0,200,83,0.4),
+        0 40px 120px rgba(0,0,0,0.8);
+      border:1px solid rgba(255,255,255,0.12);
+      padding:8px;
+      position:relative;
+      overflow:hidden;
+    }
+
+    .badge {
+      position:absolute;
+      left:16px;
+      top:16px;
+      background:rgba(0,0,0,0.6);
+      border:1px solid rgba(0,200,83,0.7);
+      padding:6px 10px;
+      font-size:12px;
+      font-weight:600;
+      line-height:1.2;
+      border-radius:12px;
+      color:#00c853;
+      box-shadow:
+        0 0 10px rgba(0,200,83,0.7),
+        0 20px 40px rgba(0,0,0,0.8);
+      z-index:3;
+      max-width:80%;
+    }
+
+    .profile-video {
+      width:100%;
+      border-radius:14px;
+      background-color:#000;
+      object-fit:cover;
+      max-height:60vh;
+      cursor:pointer;
+    }
+
+    /* Pulsante audio */
+    #audioButton {
+      position:absolute;
+      right:14px;
+      bottom:14px;
+      background:rgba(0,0,0,0.6);
+      border:1px solid rgba(0,200,83,0.7);
+      border-radius:50%;
+      width:44px;
+      height:44px;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      color:#00c853;
+      font-size:18px;
+      cursor:pointer;
+      box-shadow:
+        0 0 10px rgba(0,200,83,0.5),
+        0 6px 20px rgba(0,0,0,0.8);
+      transition: all 0.2s ease-in-out;
+      z-index:4;
+    }
+
+    #audioButton:hover {
+      background:rgba(0,200,83,0.1);
+      transform: scale(1.05);
+    }
+
+    /* Testo "Tocca per attivare l’audio" */
+    #audioHint {
+      position:absolute;
+      bottom:70px;
+      right:0;
+      left:0;
+      text-align:center;
+      font-size:0.85rem;
+      color:#00c853;
+      background:rgba(0,0,0,0.5);
+      padding:6px 10px;
+      border-radius:10px;
+      width:70%;
+      margin:0 auto;
+      animation: fadein 0.8s ease-in;
+      z-index:3;
+    }
+
+    @keyframes fadein {
+      from { opacity:0; }
+      to { opacity:1; }
+    }
+
+    .info { text-align:center; margin-top:16px; margin-bottom:24px; }
+
+    .name { font-size:1.2rem; font-weight:600; color:#fff; }
+
+    .role {
+      font-size:0.9rem;
+      color:rgba(255,255,255,0.7);
+      line-height:1.4;
+      margin-top:4px;
+    }
+
+    .buttons {
+      display:grid;
+      grid-template-columns:1fr;
+      gap:12px;
+      width:100%;
+    }
+
+    .btn {
+      background:#0f1010;
+      border-radius:14px;
+      padding:16px 20px;
+      border:1px solid rgba(255,255,255,0.15);
+      box-shadow:
+        0 24px 48px rgba(0,200,83,0.25),
+        0 2px 4px rgba(0,0,0,0.8) inset;
+      text-decoration:none;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      color:#fff;
+      font-size:0.95rem;
+      font-weight:500;
+      transition: all 0.2s ease-in-out;
+    }
+
+    .btn:hover {
+      transform: scale(1.02);
+      border-color: #00c853;
+      box-shadow:
+        0 0 20px rgba(0,200,83,0.5),
+        0 2px 4px rgba(0,0,0,0.8) inset;
+    }
+
+    .btn-title { color:#fff; font-weight:600; font-size:1rem; }
+    .btn-desc { color:rgba(255,255,255,0.6); font-size:0.8rem; }
+    .btn-arrow { color:#00c853; font-weight:600; font-size:1rem; padding-left:12px; }
+
+    .footer-note {
+      margin-top:28px;
+      color:rgba(255,255,255,0.4);
+      font-size:0.7rem;
+      text-align:center;
+      line-height:1.4;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="card">
+    <div class="video-wrapper">
+      <div class="badge">Ciao, sono Paolo, il tuo referente EarthCare.</div>
+
+      <video
+        id="profileVideo"
+        class="profile-video"
+        src="video_intro.mp4"
+        autoplay
+        muted
+        loop
+        playsinline
+        webkit-playsinline
+        preload="auto"
+      ></video>
+
+      <div id="audioHint">🔊 Tocca sul video o sull’icona per attivare l’audio</div>
+      <div id="audioButton" title="Attiva audio">🔊</div>
+    </div>
+
+    <div class="info">
+      <div class="name">EARTH CARE GROUP Srl Società Benefit</div>
+      <div class="role">Biglietto da visita elettronico · EarthCare</div>
+    </div>
+
+    <div class="buttons">
+      <a class="btn" href="ai.html">
+        <div>
+          <div class="btn-title">🤖 Chatta con la nostra AI</div>
+          <div class="btn-desc">Assistente virtuale EarthCare</div>
+        </div>
+        <div class="btn-arrow">›</div>
+      </a>
+
+      <a class="btn" href="https://bc.earthcare.it/mwrzb6moy9/" target="_blank" rel="noopener">
+        <div>
+          <div class="btn-title">📇 Vedi i miei contatti</div>
+          <div class="btn-desc">Apri il mio biglietto digitale EarthCare</div>
+        </div>
+        <div class="btn-arrow">›</div>
+      </a>
+    </div>
+
+    <div class="footer-note">
+      Questo biglietto digitale EarthCare è personale e sempre aggiornato.<br/>
+      Salvalo nei preferiti o condividilo.
+    </div>
+  </div>
+
+  <script>
+    const videoEl = document.getElementById('profileVideo');
+    const audioBtn = document.getElementById('audioButton');
+    const audioHint = document.getElementById('audioHint');
+    let audioActive = false;
+
+    // Prova ad avviare il video in muto all'apertura
+    window.addEventListener('load', () => {
+      videoEl.muted = true;
+      videoEl.play().catch(() => {});
+      setTimeout(() => {
+        if (audioHint) audioHint.style.display = 'none';
+      }, 3000);
+    });
+
+    function activateAudio() {
+      videoEl.muted = false;
+      videoEl.volume = 1.0;
+      videoEl.play().catch(() => {});
+      audioBtn.textContent = '🔇';
+      audioBtn.title = 'Disattiva audio';
+      audioActive = true;
+      if (audioHint) audioHint.style.display = 'none';
+    }
+
+    function toggleAudio() {
+      if (!audioActive) {
+        activateAudio();
+      } else {
+        videoEl.muted = true;
+        audioBtn.textContent = '🔊';
+        audioBtn.title = 'Attiva audio';
+        audioActive = false;
+      }
+    }
+
+    // Clic sul pulsante audio
+    audioBtn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      toggleAudio();
+    });
+
+    // Clic sul video
+    videoEl.addEventListener('click', () => {
+      toggleAudio();
+    });
+  </script>
+
+</body>
+</html>
