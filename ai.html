@@ -13,7 +13,7 @@
       height: 100%;
       background: #000;
       overflow: hidden;
-      font-family: system-ui, Arial;
+      font-family: system-ui, Arial, sans-serif;
     }
 
     header {
@@ -33,7 +33,7 @@
       left: 0;
     }
 
-    /* Area che contiene l'avatar a tutto schermo sotto l'header */
+    /* Area sotto l'header */
     #fullscreen-wrapper {
       position: fixed;
       top: 50px; /* spazio per header */
@@ -46,24 +46,31 @@
       z-index: 1;
     }
 
-    /* Iframe HeyGen full screen */
-    #heygenFrame {
+    /* Wrapper che croppa la parte alta (dove c'è il selettore lingua) */
+    #avatar-frame-wrapper {
+      position: relative;
       width: 100%;
       height: 100%;
+      overflow: hidden; /* taglia tutto quello che è fuori */
+    }
+
+    /* Iframe ingrandito e spostato verso l'alto per far sparire la barra superiore */
+    #heygenFrame {
+      position: absolute;
+      top: -50px;          /* sposta in su per nascondere la barra con le lingue */
+      left: 0;
+      width: 100%;
+      height: calc(100% + 50px); /* estende verso il basso per non tagliare la parte bassa */
       border: none;
       object-fit: cover;
     }
 
-    /* BLOCCO per impedire il click sul pulsante lingua in alto a destra */
-    #lang-blocker {
-      position: fixed;
-      top: 50px;           /* esattamente sotto l'header */
-      right: 0;
-      width: 120px;        /* larghezza area pulsante lingua */
-      height: 80px;        /* altezza area pulsante lingua */
-      background: #000;    /* lo copre visivamente (nero su sfondo nero) */
-      z-index: 9999;       /* sopra l'iframe */
-      pointer-events: auto;/* intercetta i click, sotto non arriva nulla */
+    @media (max-width: 768px) {
+      /* leggera regolazione su mobile 9:16 */
+      #heygenFrame {
+        top: -60px;
+        height: calc(100% + 60px);
+      }
     }
   </style>
 </head>
@@ -72,16 +79,14 @@
   <header>DIGITAL SCREEN ITALIA · AI ASSISTANT</header>
 
   <div id="fullscreen-wrapper">
-    <iframe
-      id="heygenFrame"
-      allow="microphone"
-      allowfullscreen="false"
-      title="AI Assistant Italiano"
-      src="https://labs.heygen.com/guest/streaming-embed?share=eyJxdWFsaXR5IjoiaGlnaCIsImF2YXRhck5hbWUiOiJLYXR5YV9Qcm9mZXNzaW9uYWxMb29rX3B1YmxpYyIsInByZXZpZXdJbWciOiJodHRwczovL2ZpbGVzMi5oZXlnZW4uYWkvYXZhdGFyL3YzLzM0OGRkZjUwM2M2NTRiOWJiYmI4YmVhOWY5MjEwZWFkXzU1ODcwL3ByZXZpZXdfdGFyZ2V0LndlYnAiLCJuZWVkUmVtb3ZlQmFja2dyb3VuZCI6dHJ1ZSwia25vd2xlZGdlQmFzZUlkIjoiNmRkNTZiYzUyYjlmNDdlYjkzNDMxODRlMTc4Y2M4ZWIiLCJ1c2VybmFtZSI6ImZiNDBjZGI1NjdlZjRjMTg5MDM4NDkwODI5YzIwZTZmIn0%3D&inIFrame=1&lang=it">
-    </iframe>
+    <div id="avatar-frame-wrapper">
+      <iframe
+        id="heygenFrame"
+        allow="microphone"
+        title="AI Assistant Italiano"
+        src="https://labs.heygen.com/guest/streaming-embed?share=eyJxdWFsaXR5IjoiaGlnaCIsImF2YXRhck5hbWUiOiJLYXR5YV9Qcm9mZXNzaW9uYWxMb29rX3B1YmxpYyIsInByZXZpZXdJbWciOiJodHRwczovL2ZpbGVzMi5oZXlnZW4uYWkvYXZhdGFyL3YzLzM0OGRkZjUwM2M2NTRiOWJiYmI4YmVhOWY5MjEwZWFkXzU1ODcwL3ByZXZpZXdfdGFyZ2V0LndlYnAiLCJuZWVkUmVtb3ZlQmFja2dyb3VuZCI6dHJ1ZSwia25vd2xlZGdlQmFzZUlkIjoiNmRkNTZiYzUyYjlmNDdlYjkzNDMxODRlMTc4Y2M4ZWIiLCJ1c2VybmFtZSI6ImZiNDBjZGI1NjdlZjRjMTg5MDM4NDkwODI5YzIwZTZmIn0%3D&inIFrame=1&lang=it">
+      </iframe>
+    </div>
   </div>
-
-  <!-- Overlay che copre la zona del selettore lingua nell'iframe -->
-  <div id="lang-blocker"></div>
 </body>
 </html>
