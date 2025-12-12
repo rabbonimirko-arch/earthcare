@@ -33,9 +33,10 @@
       left: 0;
     }
 
+    /* Area che contiene l'avatar a tutto schermo sotto l'header */
     #fullscreen-wrapper {
       position: fixed;
-      top: 50px;
+      top: 50px; /* spazio per header */
       left: 0;
       right: 0;
       bottom: 0;
@@ -45,11 +46,24 @@
       z-index: 1;
     }
 
-    iframe {
+    /* Iframe HeyGen full screen */
+    #heygenFrame {
       width: 100%;
       height: 100%;
       border: none;
       object-fit: cover;
+    }
+
+    /* BLOCCO per impedire il click sul pulsante lingua in alto a destra */
+    #lang-blocker {
+      position: fixed;
+      top: 50px;           /* esattamente sotto l'header */
+      right: 0;
+      width: 120px;        /* larghezza area pulsante lingua */
+      height: 80px;        /* altezza area pulsante lingua */
+      background: #000;    /* lo copre visivamente (nero su sfondo nero) */
+      z-index: 9999;       /* sopra l'iframe */
+      pointer-events: auto;/* intercetta i click, sotto non arriva nulla */
     }
   </style>
 </head>
@@ -58,7 +72,8 @@
   <header>DIGITAL SCREEN ITALIA · AI ASSISTANT</header>
 
   <div id="fullscreen-wrapper">
-    <iframe id="heygenFrame"
+    <iframe
+      id="heygenFrame"
       allow="microphone"
       allowfullscreen="false"
       title="AI Assistant Italiano"
@@ -66,30 +81,7 @@
     </iframe>
   </div>
 
-  <script>
-    // Attende che l’iframe sia caricato e poi nasconde il selettore lingua
-    const iframe = document.getElementById('heygenFrame');
-    iframe.addEventListener('load', () => {
-      try {
-        const iframeDoc = iframe.contentDocument || iframe.contentWindow.document;
-        const style = iframeDoc.createElement('style');
-        style.textContent = `
-          [class*="language"], 
-          [data-testid*="language"], 
-          button:has(svg), 
-          button[aria-label*="Language"], 
-          div[class*="Lang"], 
-          select {
-            display: none !important;
-            visibility: hidden !important;
-            opacity: 0 !important;
-          }
-        `;
-        iframeDoc.head.appendChild(style);
-      } catch (e) {
-        console.warn('Impossibile accedere all’iframe per motivi di sicurezza, ma la lingua resta impostata su italiano.');
-      }
-    });
-  </script>
+  <!-- Overlay che copre la zona del selettore lingua nell'iframe -->
+  <div id="lang-blocker"></div>
 </body>
 </html>
